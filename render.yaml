@@ -1,0 +1,26 @@
+# Render Blueprint: one-click deploy of the API + managed PostgreSQL
+databases:
+  - name: jobtrackr-db
+    databaseName: jobtrackr
+    user: jobtrackr
+    plan: free
+
+services:
+  - type: web
+    name: jobtrackr-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_HOST
+        fromDatabase: { name: jobtrackr-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: jobtrackr-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: jobtrackr-db, property: database }
+      - key: DB_USER
+        fromDatabase: { name: jobtrackr-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: jobtrackr-db, property: password }
+      - key: JWT_SECRET
+        generateValue: true
